@@ -377,13 +377,11 @@ public class SimulacionPareSiga implements Directions {
         World.setVisible(true);
         World.setDelay(20);
 
-        // 1) Generar los 28 robots en la zona azul (serpenteo). NO se mueven aún.
         int[][] posiciones = generarPosicionesZonaAzul();
         SimRobot[] robots = new SimRobot[28];
         for (int i = 0; i < 28; i++) {
             String tipo = (i < 7) ? "rapida" : (i < 14 ? "larga" : "quieto");
             robots[i] = new SimRobot(100 + i, posiciones[i][0], posiciones[i][1], East, 0, Color.BLUE, "azul", tipo);
-            // Registrar su celda inicial para que nadie se superponga
             OcupacionCeldas.preset(posiciones[i][0], posiciones[i][1], 100 + i);
         }
         System.out.println("Generados 28 robots azules. Esperando para iniciar movimiento...");
@@ -394,13 +392,10 @@ public class SimulacionPareSiga implements Directions {
         for (int i = 0; i < 28; i++) {
             String tipo = (i < 7) ? "rapida" : (i < 14 ? "larga" : "quieto");
             robotsVerde[i] = new SimRobot(200 + i, posicionesVerde[i][0], posicionesVerde[i][1], East, 0, Color.GREEN, "verde", tipo);
-            // Registrar su celda inicial para que nadie se superponga
             OcupacionCeldas.preset(posicionesVerde[i][0], posicionesVerde[i][1], 200 + i);
         }
         Thread.sleep(1500);
 
-        // 2) Iniciar movimiento: primero los que están en la calle 1 (7 robots),
-        //    luego, tras 2s, los de la calle 2 (otros 7). Así evitamos que los del centro se muevan primero.
         ArrayList<Thread> hilos = new ArrayList<>();
         for (int i = 0; i < robots.length; i++) {
             if (posiciones[i][0] == 1) {
@@ -410,7 +405,6 @@ public class SimulacionPareSiga implements Directions {
                 Thread.sleep(150);
             }
         }
-        // pequeña pausa para que despejen la salida
         Thread.sleep(2000);
         for (int i = 0; i < robots.length; i++) {
             if (posiciones[i][0] == 2) {
@@ -421,7 +415,6 @@ public class SimulacionPareSiga implements Directions {
             }
         }
 
-        // 3) Esperar un rato (o hasta que terminen)
         long deadline = System.currentTimeMillis() + 45000;
         for (Thread t : hilos) {
             long left = deadline - System.currentTimeMillis();
@@ -429,46 +422,34 @@ public class SimulacionPareSiga implements Directions {
         }
     }
 
-    // 28 posiciones únicas dentro de la zona azul (aprox: calles 1..5, avenidas 1..8)
-    // Orden de serpenteo solicitado: iniciar en (1,7) hacia la izquierda hasta (1,1),
-    // luego seguir serpenteando: calle 2 de 1->8, calle 3 de 8->1, etc.
     private static int[][] generarPosicionesZonaAzul() {
         ArrayList<int[]> lista = new ArrayList<>();
 
-        // Calle 1: de av 7 -> 1
         for (int av = 7; av >= 1 && lista.size() < 28; av--) {
             lista.add(new int[]{1, av});
         }
 
-        // Resto de calles en serpenteo clásico (solo avenidas 1..7, no usar avenida 8)
         for (int street = 2; street <= 5 && lista.size() < 28; street++) {
             if (street % 2 == 0) {
-                // pares: 1 -> 7
                 for (int av = 1; av <= 7 && lista.size() < 28; av++) {
                     lista.add(new int[]{street, av});
                 }
             } else {
-                // impares: 7 -> 1
                 for (int av = 7; av >= 1 && lista.size() < 28; av--) {
                     lista.add(new int[]{street, av});
                 }
             }
         }
 
-        // Asegurar longitud 28
         int[][] out = new int[28][2];
         for (int i = 0; i < 28; i++) out[i] = lista.get(i);
         return out;
     }
 
-    // 28 posiciones para la zona verde: iniciar en (street=12, avenue=23), luego (13,23),
-    // después serpenteo dentro del rectángulo aprox. calles 13..16 y avenidas 23..30.
     private static int[][] generarPosicionesZonaVerde() {
         ArrayList<int[]> lista = new ArrayList<>();
-        // Tramo vertical de entrada
         lista.add(new int[]{12, 23});
         if (lista.size() < 28) lista.add(new int[]{13, 23});
-        // Serpenteo en la "bahía" verde
         for (int street = 13; street <= 16 && lista.size() < 28; street++) {
             if (street % 2 == 1) {
                 for (int av = 23; av <= 30 && lista.size() < 28; av++) lista.add(new int[]{street, av});
@@ -476,7 +457,6 @@ public class SimulacionPareSiga implements Directions {
                 for (int av = 30; av >= 23 && lista.size() < 28; av--) lista.add(new int[]{street, av});
             }
         }
-        // Recortar
         int[][] out = new int[28][2];
         for (int i = 0; i < 28; i++) out[i] = lista.get(i);
         return out;

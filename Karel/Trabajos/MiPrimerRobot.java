@@ -1,3 +1,5 @@
+package Trabajos;
+
 import kareltherobot.*;
 import java.awt.Color;
 
@@ -54,7 +56,7 @@ class Racer extends Robot implements Runnable {
 }
 
 public class MiPrimerRobot implements Directions {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // Cargar el mundo
         World.readWorld("Mundo1.kwld");
         World.setVisible(true);
