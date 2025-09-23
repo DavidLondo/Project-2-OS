@@ -101,6 +101,7 @@ public class RobotThread extends Robot{
                     WorldUtils.freePosition(getStreet(), getAvenue());
                     // Realizar movimiento
                     super.move();
+                    updatePositionAfterMove();
                     return true;
                 }
             } else {
