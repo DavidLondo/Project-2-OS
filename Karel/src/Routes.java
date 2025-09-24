@@ -138,7 +138,7 @@ public class Routes {
 
         releaseZonePermission(dispute3);
 
-        moveTo(9, Directions.West, robot);
+        moveTo(8, Directions.West, robot);
 
         robot.stopRobot();
     }
@@ -153,6 +153,31 @@ public class Routes {
             }
         }
         return true;
+    }
+
+    public static void blueZone(RobotThread robot) {
+        moveTo(4, Directions.North, robot);
+        moveTo(1, Directions.West, robot);
+        moveTo(3, Directions.South, robot);
+        moveTo(7, Directions.East, robot);
+        moveTo(2, Directions.South, robot);
+        moveTo(1, Directions.West, robot);
+        moveTo(1, Directions.South, robot);
+        moveTo(11, Directions.East, robot);
+    }
+    
+    public static void greenZone(RobotThread robot) {
+        moveTo(16, Directions.North, robot);
+        moveTo(29, Directions.West, robot);
+        moveTo(15, Directions.South, robot);
+        moveTo(23, Directions.West, robot);
+        moveTo(14, Directions.South, robot);
+        moveTo(29, Directions.East, robot);
+        moveTo(12, Directions.South, robot);
+        moveTo(28, Directions.West, robot);
+        moveTo(13, Directions.North, robot);
+        moveTo(23, Directions.West, robot);
+        moveTo(10, Directions.South, robot);
     }
 
     private static boolean tryAcquireZonePermission(Semaphore semaphore) {
