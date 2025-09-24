@@ -47,7 +47,7 @@ public class RobotThread extends Robot{
             case "East": currentAvenue++; break;
             case "West": currentAvenue--; break;
         }
-        System.out.println(robotName + ": Nueva posición (" + currentStreet + "," + currentAvenue + ")");
+        //System.out.println(robotName + ": Nueva posición (" + currentStreet + "," + currentAvenue + ")");
     }
 
     private void updateDirectionAfterTurn() {
@@ -57,7 +57,7 @@ public class RobotThread extends Robot{
             case "South": currentDirection = Directions.East; break;
             case "East": currentDirection = Directions.North; break;
         }
-        System.out.println(robotName + ": Nueva dirección " + currentDirection);
+        //System.out.println(robotName + ": Nueva dirección " + currentDirection);
     }
 
     @Override 
@@ -74,7 +74,7 @@ public class RobotThread extends Robot{
 
     public boolean safeMove() {
         if (!WorldUtils.tryAcquireMovementPermission()) {
-            System.out.println(robotName + ": Esperando permiso para mover...");
+            //System.out.println(robotName + ": Esperando permiso para mover...");
             WorldUtils.releaseMovementPermission();
             return false;
         }
@@ -93,7 +93,7 @@ public class RobotThread extends Robot{
             
             // Verificar si la posición está segura
             if (WorldUtils.isPositionSafe(nextStreet, nextAvenue)) {
-                System.out.println(robotName + ": Moviendo a (" + nextStreet + "," + nextAvenue + ")");
+                //System.out.println(robotName + ": Moviendo a (" + nextStreet + "," + nextAvenue + ")");
                 
                 // Reservar nueva posición
                 if (WorldUtils.reservePosition(nextStreet, nextAvenue)) {
@@ -105,7 +105,7 @@ public class RobotThread extends Robot{
                     return true;
                 }
             } else {
-                System.out.println(robotName + ": Posición (" + nextStreet + "," + nextAvenue + ") no segura");
+                //System.out.println(robotName + ": Posición (" + nextStreet + "," + nextAvenue + ") no segura");
             }
             return false;
         } finally {
@@ -116,7 +116,7 @@ public class RobotThread extends Robot{
     public void safeTurnLeft() {
         if (WorldUtils.tryAcquireMovementPermission()) {
             try {
-                System.out.println(robotName + ": Girando a la izquierda");
+                //System.out.println(robotName + ": Girando a la izquierda");
                 super.turnLeft();
                 updateDirectionAfterTurn();
             } finally {
@@ -132,24 +132,33 @@ public class RobotThread extends Robot{
     }
 
     private void testMovement() {
-        
-            try {
-                if (robotName == "GREEN"){
-                    Routes.greenLong(this);
+        try {
+            if (robotName == "GREEN"){
+                    Routes.moveTo(11, Directions.South, this);
+                    if (Routes.selectFastGreenRoute()) {
+                        Routes.greenShort(this);
+                    } else {
+                        Routes.greenLong(this);
+                    }
                 } else if (robotName == "BLUE"){
-                    Routes.blueLong(this);
+                    Routes.moveTo(11, Directions.East, this);
+                    if (Routes.selectFastBlueRoute()) {
+                        Routes.blueShort(this);
+                    } else {
+                        Routes.blueLong(this);
+                    }
                 }
             } catch (Exception e) {
-                System.out.println(robotName + ": Error - " + e.getMessage());
+                //System.out.println(robotName + ": Error - " + e.getMessage());
             }
         
     }
 
     @Override
     public void run() {
-        System.out.println(robotName + ": Iniciando en posición (" + getStreet() + "," + getAvenue() + ")");
+        //System.out.println(robotName + ": Iniciando en posición (" + getStreet() + "," + getAvenue() + ")");
         testMovement();
-        System.out.println(robotName + ": Finalizando");
+        //System.out.println(robotName + ": Finalizando");
     }
 
     public String getRobotInfo() {
