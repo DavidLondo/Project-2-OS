@@ -13,23 +13,23 @@ public class Main implements Directions {
             WorldUtils.initializeWorld(33, 20);
             
             // Crear robots en posiciones iniciales diferentes
-            RobotThread robot1 = new RobotThread("ROJO", 1, 1, East, 0, Color.RED);
-            RobotThread robot2 = new RobotThread("AZUL", 1, 2, East, 0, Color.BLUE);
-            RobotThread robot3 = new RobotThread("VERDE", 1, 20, West, 0, Color.GREEN);
+            //RobotThread robot1 = new RobotThread("ROJO", 1, 1, East, 0, Color.RED);
+            RobotThread robot2 = new RobotThread("BLUE", 1, 11, East, 0, Color.BLUE);
+            RobotThread robot3 = new RobotThread("GREEN",11, 23, South, 0, Color.GREEN);
             
             System.out.println("=== INFORMACIÓN DE ROBOTS ===");
-            System.out.println(robot1.getRobotInfo());
+            //System.out.println(robot1.getRobotInfo());
             System.out.println(robot2.getRobotInfo());
             System.out.println(robot3.getRobotInfo());
             
             // Crear y iniciar hilos
-            Thread t1 = new Thread(robot1);
+            //Thread t1 = new Thread(robot1);
             Thread t2 = new Thread(robot2);
             Thread t3 = new Thread(robot3);
             
             System.out.println("Iniciando simulación con 3 robots...");
             
-            t1.start();
+            //t1.start();
             Thread.sleep(500);
             t2.start();
             Thread.sleep(500);
@@ -40,7 +40,7 @@ public class Main implements Directions {
             WorldUtils.printWorldStatus();
             
             // Esperar a que todos terminen
-            t1.join();
+            //t1.join();
             t2.join();
             t3.join();
             
