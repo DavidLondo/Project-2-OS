@@ -118,7 +118,7 @@ public class RobotThread extends Robot{
             try {
                 System.out.println(robotName + ": Girando a la izquierda");
                 super.turnLeft();
-                updatePositionAfterMove();
+                updateDirectionAfterTurn();
             } finally {
                 WorldUtils.releaseMovementPermission();
             }
@@ -132,14 +132,17 @@ public class RobotThread extends Robot{
     }
 
     private void testMovement() {
-        while (running) {
+        
             try {
-                safeMove();
+                if (robotName == "GREEN"){
+                    Routes.greenLong(this);
+                } else if (robotName == "BLUE"){
+                    Routes.blueLong(this);
+                }
             } catch (Exception e) {
                 System.out.println(robotName + ": Error - " + e.getMessage());
-                break;
             }
-        }
+        
     }
 
     @Override
