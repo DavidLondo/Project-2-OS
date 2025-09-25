@@ -67,7 +67,7 @@ public class Routes {
         moveTo(10, Directions.South, robot);
         moveTo(10, Directions.East, robot);
         moveTo(2, Directions.South, robot);
-        moveTo(8, Directions.East, robot);
+        moveTo(8, Directions.West, robot);
     }
 
     public static void blueShort(RobotThread robot) {
@@ -99,7 +99,7 @@ public class Routes {
         releaseZonePermission(dispute1);
         moveTo(12, Directions.North, robot);
 
-        robot.stopRobot();
+        // Importante: no detener aquí para permitir encadenar con greenZone + ruta verde
     }
 
     public static void greenShort(RobotThread robot) {
@@ -122,6 +122,9 @@ public class Routes {
         acquireZonePermission(green3);
         acquireZonePermission(dispute2);
 
+    // Liberar green2 ahora que entramos en la siguiente fase (evita retenerlo hasta el final)
+    releaseZonePermission(green2);
+
         moveTo(1, Directions.South, robot);
         moveTo(26, Directions.West, robot);
         moveTo(2, Directions.North, robot);
@@ -138,9 +141,12 @@ public class Routes {
 
         releaseZonePermission(dispute3);
 
+    // Liberar green3 antes de finalizar para no agotar sus permisos
+    releaseZonePermission(green3);
+
         moveTo(8, Directions.West, robot);
 
-        robot.stopRobot();
+        // Importante: no detener aquí para permitir encadenar con blueZone + ruta azul
     }
 
     private static boolean acquireZonePermission(Semaphore semaphore) {
@@ -177,7 +183,7 @@ public class Routes {
         moveTo(28, Directions.West, robot);
         moveTo(13, Directions.North, robot);
         moveTo(23, Directions.West, robot);
-        moveTo(10, Directions.South, robot);
+        moveTo(11, Directions.South, robot);
     }
 
     private static boolean tryAcquireZonePermission(Semaphore semaphore) {
@@ -188,19 +194,55 @@ public class Routes {
         semaphore.release();
     }
 
-    public static boolean selectFastBlueRoute() {
-        if(tryAcquireZonePermission(blue1)) {
-            acquireZonePermission(blue1);
-            return true;
+    private static boolean shouldTakeBlueShort() {
+        if (blue1.availablePermits() == 0) return false;
+
+        int conflicts = 0;
+
+        if (dispute1.availablePermits() == 0) conflicts++;
+        if (dispute2.availablePermits() == 0) conflicts++;
+        if (dispute3.availablePermits() == 0) conflicts++;
+
+        return conflicts <= 2;
+    }
+
+    private static boolean shouldTakeGreenShort() {
+        if (green1.availablePermits() == 0) return false;
+
+        int conflicts = 0;
+
+        if (green2.availablePermits() == 0) conflicts++;
+        if (green3.availablePermits() == 0) conflicts++;
+
+        if (dispute1.availablePermits() == 0) conflicts++;
+        if (dispute2.availablePermits() == 0) conflicts++;
+        if (dispute3.availablePermits() == 0) conflicts++;
+
+        return conflicts <= 2;
+    }
+
+    public static void runBlueSmart(RobotThread robot) {
+        if (shouldTakeBlueShort() && selectFastBlueRoute()) {
+    
+            blueShort(robot);
+        } else {
+            blueLong(robot);
         }
-        return false;
+    }
+
+    public static void runGreenSmart(RobotThread robot) {
+        if (shouldTakeGreenShort() && selectFastGreenRoute()) {
+            greenShort(robot);
+        } else {
+            greenLong(robot);
+        }
+    }
+
+    public static boolean selectFastBlueRoute() {
+        return tryAcquireZonePermission(blue1);
     }
 
     public static boolean selectFastGreenRoute() {
-        if(tryAcquireZonePermission(green1)) {
-            acquireZonePermission(green1);
-            return true;
-        }
-        return false;
+        return tryAcquireZonePermission(green1);
     }
 }
