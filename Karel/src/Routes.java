@@ -56,6 +56,9 @@ public class Routes {
         moveTo(10, Directions.North, robot);
         moveTo(30, Directions.East, robot);
         moveTo(12, Directions.North, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.putBeeper();
+        }
     }
     
     public static void greenLong(RobotThread robot) {
@@ -67,6 +70,10 @@ public class Routes {
         moveTo(10, Directions.South, robot);
         moveTo(10, Directions.East, robot);
         moveTo(2, Directions.South, robot);
+        moveTo(9, Directions.West, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.putBeeper();
+        }
         moveTo(8, Directions.West, robot);
     }
 
@@ -98,8 +105,10 @@ public class Routes {
         moveTo(11, Directions.North, robot);
         releaseZonePermission(dispute1);
         moveTo(12, Directions.North, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.putBeeper();
+        }
 
-        // Importante: no detener aquí para permitir encadenar con greenZone + ruta verde
     }
 
     public static void greenShort(RobotThread robot) {
@@ -122,7 +131,6 @@ public class Routes {
         acquireZonePermission(green3);
         acquireZonePermission(dispute2);
 
-    // Liberar green2 ahora que entramos en la siguiente fase (evita retenerlo hasta el final)
     releaseZonePermission(green2);
 
         moveTo(1, Directions.South, robot);
@@ -141,12 +149,13 @@ public class Routes {
 
         releaseZonePermission(dispute3);
 
-    // Liberar green3 antes de finalizar para no agotar sus permisos
     releaseZonePermission(green3);
 
+        moveTo(9, Directions.West, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.putBeeper();
+        }
         moveTo(8, Directions.West, robot);
-
-        // Importante: no detener aquí para permitir encadenar con blueZone + ruta azul
     }
 
     private static boolean acquireZonePermission(Semaphore semaphore) {
@@ -169,6 +178,10 @@ public class Routes {
         moveTo(2, Directions.South, robot);
         moveTo(1, Directions.West, robot);
         moveTo(1, Directions.South, robot);
+        moveTo(7, Directions.East, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.pickBeeper();
+        }
         moveTo(11, Directions.East, robot);
     }
     
@@ -183,6 +196,10 @@ public class Routes {
         moveTo(28, Directions.West, robot);
         moveTo(13, Directions.North, robot);
         moveTo(23, Directions.West, robot);
+        moveTo(12, Directions.South, robot);
+        for (int i = 0; i < 4; i++) {
+            robot.pickBeeper();
+        }
         moveTo(11, Directions.South, robot);
     }
 

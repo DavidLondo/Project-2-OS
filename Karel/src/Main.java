@@ -13,7 +13,8 @@ public class Main implements Directions {
             WorldUtils.initializeWorld(33, 20);
             
             System.out.println("Spawning intercalado de 28 robots AZULES y 28 robots VERDES (API simplificada)...");
-            ZoneSpawner.spawnInterleaved(28, 28, 120);
+            ZoneSpawner.spawnInterleaved(15, 15, 120);
+            ZoneSpawner.spawnInterleaved(13, 13, 120);
             Thread.sleep(20000);
             System.out.println("Fin de espera principal.");
             
