@@ -7,7 +7,7 @@ public class Main implements Directions {
             
             World.readWorld("../worlds/Aranjuez.kwld");
             World.setVisible(true);
-            World.setDelay(30);
+            World.setDelay(5);
             
             
             WorldUtils.initializeWorld(33, 20);

@@ -54,8 +54,13 @@ public class Routes {
         moveTo(5, Directions.South, robot);
         moveTo(20, Directions.East, robot);
         moveTo(10, Directions.North, robot);
+        moveTo(23, Directions.East, robot);
+        // Esperamos permiso desde la zona green 1 para acceder a la ruta
+        acquireZonePermission(green1);
         moveTo(30, Directions.East, robot);
         moveTo(12, Directions.North, robot);
+        releaseZonePermission(green1);
+
         for (int i = 0; i < 4; i++) {
             robot.putBeeper();
         }
